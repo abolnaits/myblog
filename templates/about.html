@@ -1,5 +1,28 @@
 {% extends "base.html" %}
-    {% block content %}
-        <h1>About</h1>
-       
-    {% endblock content %}
+
+        {% block content %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>About</h1>
+                    {% for post in posts %}
+                    <p>{{ post }}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li>
+                            <a>Link</a>
+                        </li>
+                        <li>
+                            <a>Link</a>
+                        </li>
+                    </ul>
+                </div>
+        
+        </div>
+        
+        </div>
+            
+        {% endblock content %}
+        

@@ -14,9 +14,18 @@ posts = [
         {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
         {'author':'Leo Orellana','titulo':'Titulo 2','content':'Contenido post 2','date':'Enero 20,2020'},
     ]
-@app.route('/')
+@app.route('/',methods=['GET','POST'])
 def index():
-    form = RegistrationForm()
+    form = LoginForm()
+    if form.validate_on_submit():
+        #print(form.email._value)
+        if form.email.data == 'abol@test.com' and form.password.data == '12345':
+            flash('Bienvenido {0}!'.format(form.email.data),'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Verique su email/password!','danger')
+            #return redirect(url_for('index'))
+
     return render_template('index.html',form=form,title='Registro')
 
 
@@ -24,7 +33,7 @@ def index():
 def register():
     #Init form Registration
     form = RegistrationForm()
-    print('Form Registration: ',form)
+    #print('Form Registration: ',form)
     if form.validate_on_submit():
         flash('Cuenta registrada para {0}!'.format(form.username.data),'success')
         return redirect(url_for('home'))
