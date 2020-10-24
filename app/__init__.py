@@ -6,6 +6,8 @@ from datetime import datetime
 from flask import Flask
 #SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
+#Bcrypt
+from flask_bcrypt import Bcrypt
 
 #Export later in routes.py
 app = Flask(__name__)
@@ -16,6 +18,8 @@ app.config['SQLALCHEMY_DATABASE_URI']='mysql://webmaster:andres@localhost/myblog
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #Init DB , export later un models.py
 db = SQLAlchemy(app)
+#Init Bcrypt
+bcrypt = Bcrypt(app)
 
 #Routes
 from app import routes

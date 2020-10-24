@@ -1,5 +1,5 @@
 #Application for routes
-from app import app
+from app import app,bcrypt,db
 
 from flask import render_template
 from flask import url_for
@@ -31,13 +31,26 @@ def index():
     return render_template('index.html',form=form,title='Registro')
 
 
+'''
+Registro de un nuevo usuario 
+Usamos Bcrypt para encriptar 
+'''
 @app.route('/register',methods=['GET','POST'])
 def register():
     #Init form Registration
     form = RegistrationForm()
     #print('Form Registration: ',form)
     if form.validate_on_submit():
-        flash('Cuenta registrada para {0}!'.format(form.username.data),'success')
+        hashed_pasword = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = Usuario(username=form.username.data,email=form.email.data,password=hashed_pasword)
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Cuenta registrada para {0}!'.format(form.username.data),'success')
+        except Exception as e:
+            print(e)
+            flash('No se puedo registrar la cuenta para {0}!'.format(form.username.data),'danger')
+        
         return redirect(url_for('home'))
     return render_template('register.html',form=form,title='Registro')
 
