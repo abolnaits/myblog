@@ -13,6 +13,7 @@ from app.models import Usuario,Post
 #Login manager
 from flask_login import login_user
 from flask_login import current_user
+from flask_login import logout_user
 
 posts = [
         {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
@@ -76,6 +77,8 @@ def home():
 def about():
     return render_template('about.html',title='About page')
 
+#Salir del sistema
 @app.route('/logout')
 def logout():
-    return 'Salir'
+    logout_user()
+    return redirect(url_for('index'))
