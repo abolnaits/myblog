@@ -90,7 +90,14 @@ def account():
 
 #Salir del sistema
 @app.route('/logout')
-@login_required
+#@login_required
 def logout():
-    logout_user()
-    return redirect(url_for('index'))
+    #print(current_user.is_authenticated)
+    if current_user.is_authenticated:
+        logout_user()
+        flash('Sesion terminada','danger')
+    
+    return redirect(url_for('index')) 
+        
+    
+    
