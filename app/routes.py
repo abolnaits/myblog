@@ -22,11 +22,6 @@ import os
 #Pillow to manipulate images
 from PIL import Image
 
-posts = [
-        {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
-        {'author':'Leo Orellana','titulo':'Titulo 2','content':'Contenido post 2','date':'Enero 20,2020'},
-    ]
-
 #Login
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -85,6 +80,8 @@ def register():
 @app.route('/home')
 @login_required
 def home():
+    #Get all posts
+    posts = Post.query.all()
     return render_template('home.html',posts = posts)
 
 #Perfil del usuario
