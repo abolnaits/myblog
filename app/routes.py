@@ -7,7 +7,7 @@ from flask import flash
 from flask import redirect
 
 #Formas 
-from app.forms import RegistrationForm,LoginForm
+from app.forms import RegistrationForm,LoginForm,UpdateProfileForm
 #Modelos
 from app.models import Usuario,Post
 #Login manager
@@ -83,10 +83,24 @@ def home():
     return render_template('home.html',posts = posts)
 
 #Perfil del usuario
-@app.route('/account')
+@app.route('/account',methods=['GET','POST'])
 @login_required
 def account():
-    return render_template('account.html',title='Account page')
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        #Update current user
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Perfil actualizado','warning')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        #Populate the form with the current user data
+            form.username.data = current_user.username
+            form.email.data = current_user.email
+                   
+    image_file = url_for('static',filename='img/'+current_user.image_file)
+    return render_template('account.html',title='Account page',image_file=image_file,form=form)
 
 #Salir del sistema
 @app.route('/logout')

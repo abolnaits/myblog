@@ -12,6 +12,8 @@ from wtforms import ValidationError
 
 #Modelos usados para las validaciones contra el usuario
 from app.models import Usuario
+#Validacion en caso de actualizar datos
+from flask_login import current_user
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username',validators=[DataRequired(),Length(min=2,max=20)])
@@ -41,3 +43,31 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password',validators=[DataRequired()])
     remember = BooleanField('Remember me')
     submit = SubmitField('Login')
+
+
+
+
+class UpdateProfileForm(FlaskForm):
+    username = StringField('Username',validators=[DataRequired(),Length(min=2,max=20)])
+    email = StringField('Email',validators=[DataRequired(),Email()])
+    submit = SubmitField('Update')
+
+    #Validacion para el username
+    def validate_username(self,username):
+        #Verifico que los datos del usuario actual sean diferentes
+        if username.data != current_user.username:
+            #Verifico si hay un usuario con ese username
+            user = Usuario.query.filter_by(username=username.data).first()
+            #print(user)
+            if user:
+                raise ValidationError('El usuario ya esta registrado')
+
+    #Validacion para el email
+    def validate_email(self,email):
+        #Verifico que los datos del usuario actual sean diferentes
+        if email.data != current_user.email:
+            #Verifico si hay un usuario con ese username
+            user = Usuario.query.filter_by(email=email.data).first()
+            #print(user)
+            if user:
+                raise ValidationError('El email ya esta registrado')
