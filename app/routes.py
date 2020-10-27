@@ -15,9 +15,11 @@ from flask_login import login_user
 from flask_login import current_user
 from flask_login import logout_user
 from flask_login import login_required
-
+#Save image
 import secrets
 import os 
+#Pillow to manipulate images
+from PIL import Image
 
 posts = [
         {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
@@ -92,9 +94,9 @@ def account():
     if form.validate_on_submit():
         #If there is a new profile pic
         if form.picture.data:
-
-            pass 
-
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
+        
         #Update current user
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -125,10 +127,26 @@ def logout():
 #
 
 #Save the new profile pic
-#form_picture : form.picture.data
+#Copy the form_picture into the server
+#form_picture : form.picture.data, type: FileStorage
 
 def save_picture(form_picture):
+    #print(type(form_picture))
     random_hex = secrets.token_hex(8)
     #Get the extension
-    _, f_ext = os.path.splitext(form_picture)
-    
+    _, f_ext = os.path.splitext(form_picture.filename)
+    #print('Ext ==> ',f_ext)
+    #print('Name ==> ',random_hex)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path,'static/img',picture_fn)
+    #Resize the image with Pillow
+    output_size = (125,125)
+    img = Image.open(form_picture)
+    img.thumbnail(output_size)
+    img.save(picture_path)
+
+    #form_picture.save(picture_path)
+    #print('Path img ==> ',picture_path)
+    #Return the string of the file
+    return picture_fn
+
