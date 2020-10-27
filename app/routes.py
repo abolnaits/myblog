@@ -128,7 +128,11 @@ def add_post():
         return redirect(url_for('home'))
     return render_template('add_post.html',title='Create post',form=form)
 
-
+@app.route('/post/<int:post_id>')
+def post(post_id):
+    #Get the post by id
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html',title=post.title,post=post)
 
 #Salir del sistema
 @app.route('/logout')
