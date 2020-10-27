@@ -1,6 +1,6 @@
 #Application for routes
 from app import app,bcrypt,db
-
+from flask import request
 from flask import render_template
 from flask import url_for
 from flask import flash
@@ -14,6 +14,8 @@ from app.models import Usuario,Post
 from flask_login import login_user
 from flask_login import current_user
 from flask_login import logout_user
+from flask_login import login_required
+
 
 posts = [
         {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
@@ -33,8 +35,13 @@ def index():
         print('User ==> ',user)
         if user and bcrypt.check_password_hash(user.password,form.password.data):
             login_user(user,remember=form.remember.data)
+            #Get the next 
+            next_page = request.args.get('next')
             flash('Bienvenido al sistema','success')
-            return redirect(url_for('home'))
+            if next_page:
+                return redirect(next_page)
+            else:
+                return redirect(url_for('home'))
         else:
             flash('Verique su email/password!','danger')
             #return redirect(url_for('index'))
@@ -48,6 +55,7 @@ Usamos Bcrypt para encriptar
 '''
 @app.route('/register',methods=['GET','POST'])
 def register():
+
     #Si el usuario esta autentificado
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -68,17 +76,21 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html',form=form,title='Registro')
 
+
 @app.route('/home')
+@login_required
 def home():
     return render_template('home.html',posts = posts)
 
-
-@app.route('/about')
-def about():
-    return render_template('about.html',title='About page')
+#Perfil del usuario
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html',title='Account page')
 
 #Salir del sistema
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
