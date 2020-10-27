@@ -3,6 +3,7 @@ from wtforms import StringField
 from wtforms import PasswordField
 from wtforms import SubmitField
 from wtforms import BooleanField
+from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 from wtforms.validators import Length
 from wtforms.validators import Email
@@ -74,3 +75,10 @@ class UpdateProfileForm(FlaskForm):
             #print(user)
             if user:
                 raise ValidationError('El email ya esta registrado')
+
+
+#Form Post
+class PostForm(FlaskForm):
+    title = StringField('Titulo',validators=[DataRequired()])
+    content = TextAreaField('Contenido',validators=[DataRequired()])
+    submit = SubmitField('Post')

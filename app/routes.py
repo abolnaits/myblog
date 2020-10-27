@@ -8,6 +8,7 @@ from flask import redirect
 
 #Formas 
 from app.forms import RegistrationForm,LoginForm,UpdateProfileForm
+from app.forms import PostForm
 #Modelos
 from app.models import Usuario,Post
 #Login manager
@@ -110,6 +111,19 @@ def account():
                    
     image_file = url_for('static',filename='img/'+current_user.image_file)
     return render_template('account.html',title='Account page',image_file=image_file,form=form)
+
+
+#Create new post
+@app.route('/post/add',methods=['GET','POST'])
+@login_required
+def add_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        flash('Post agregado','success')
+        return redirect(url_for('home'))
+    return render_template('add_post.html',title='Create post',form=form)
+
+
 
 #Salir del sistema
 @app.route('/logout')
