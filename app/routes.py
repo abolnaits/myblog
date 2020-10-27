@@ -119,7 +119,15 @@ def account():
 def add_post():
     form = PostForm()
     if form.validate_on_submit():
-        flash('Post agregado','success')
+        post = Post(title=form.title.data,content=form.content.data,author=current_user)
+        try:
+            db.session.add(post)
+            db.session.commit()
+            flash('Post agregado','success')
+        except Exception as e:
+            flash('No se pudo agregar post','danger')
+            #print(e)
+        
         return redirect(url_for('home'))
     return render_template('add_post.html',title='Create post',form=form)
 
