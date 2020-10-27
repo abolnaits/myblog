@@ -8,7 +8,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 #Bcrypt
 from flask_bcrypt import Bcrypt
-
+#Login manager
+from flask_login import LoginManager
 #Export later in routes.py
 app = Flask(__name__)
 
@@ -20,6 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 #Init Bcrypt
 bcrypt = Bcrypt(app)
-
+#Login Manager
+login_manager = LoginManager(app)
 #Routes
 from app import routes

@@ -7,9 +7,10 @@ from wtforms.validators import DataRequired
 from wtforms.validators import Length
 from wtforms.validators import Email
 from wtforms.validators import EqualTo
+#Errores de validacion
 from wtforms import ValidationError
 
-#Modelos 
+#Modelos usados para las validaciones contra el usuario
 from app.models import Usuario
 
 class RegistrationForm(FlaskForm):
@@ -27,7 +28,7 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('El usuario ya esta registrado')
 
-    #Validacion para el username
+    #Validacion para el email
     def validate_email(self,email):
         #Verifico si hay un usuario con ese username
         user = Usuario.query.filter_by(email=email.data).first()

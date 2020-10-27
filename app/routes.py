@@ -10,19 +10,29 @@ from flask import redirect
 from app.forms import RegistrationForm,LoginForm
 #Modelos
 from app.models import Usuario,Post
-
+#Login manager
+from flask_login import login_user
+from flask_login import current_user
 
 posts = [
         {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
         {'author':'Leo Orellana','titulo':'Titulo 2','content':'Contenido post 2','date':'Enero 20,2020'},
     ]
+
+#Login
 @app.route('/',methods=['GET','POST'])
 def index():
+     #Si el usuario esta autentificado
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        #print(form.email._value)
-        if form.email.data == 'abol@test.com' and form.password.data == '12345':
-            flash('Bienvenido {0}!'.format(form.email.data),'success')
+        #Obtengo el usuario mediante el email
+        user = Usuario.query.filter_by(email=form.email.data).first()
+        print('User ==> ',user)
+        if user and bcrypt.check_password_hash(user.password,form.password.data):
+            login_user(user,remember=form.remember.data)
+            flash('Bienvenido al sistema','success')
             return redirect(url_for('home'))
         else:
             flash('Verique su email/password!','danger')
@@ -37,6 +47,9 @@ Usamos Bcrypt para encriptar
 '''
 @app.route('/register',methods=['GET','POST'])
 def register():
+    #Si el usuario esta autentificado
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     #Init form Registration
     form = RegistrationForm()
     #print('Form Registration: ',form)
@@ -48,7 +61,7 @@ def register():
             db.session.commit()
             flash('Cuenta registrada para {0}!'.format(form.username.data),'success')
         except Exception as e:
-            print(e)
+            #print(e)
             flash('No se puedo registrar la cuenta para {0}!'.format(form.username.data),'danger')
         
         return redirect(url_for('home'))
