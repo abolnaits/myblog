@@ -7,6 +7,8 @@ from wtforms.validators import DataRequired
 from wtforms.validators import Length
 from wtforms.validators import Email
 from wtforms.validators import EqualTo
+#Image field
+from flask_wtf.file import FileField,FileAllowed
 #Errores de validacion
 from wtforms import ValidationError
 
@@ -50,6 +52,7 @@ class LoginForm(FlaskForm):
 class UpdateProfileForm(FlaskForm):
     username = StringField('Username',validators=[DataRequired(),Length(min=2,max=20)])
     email = StringField('Email',validators=[DataRequired(),Email()])
+    picture = FileField('Update Profile Pic',validators=[FileAllowed(['jpg','png'])])
     submit = SubmitField('Update')
 
     #Validacion para el username

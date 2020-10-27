@@ -16,6 +16,8 @@ from flask_login import current_user
 from flask_login import logout_user
 from flask_login import login_required
 
+import secrets
+import os 
 
 posts = [
         {'author':'Andres Benitez','titulo':'Titulo 1','content':'Contenido post 1','date':'Enero 20,2020'},
@@ -88,6 +90,11 @@ def home():
 def account():
     form = UpdateProfileForm()
     if form.validate_on_submit():
+        #If there is a new profile pic
+        if form.picture.data:
+
+            pass 
+
         #Update current user
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -113,5 +120,15 @@ def logout():
     
     return redirect(url_for('index')) 
         
-    
+#   
+#Functions
+#
+
+#Save the new profile pic
+#form_picture : form.picture.data
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    #Get the extension
+    _, f_ext = os.path.splitext(form_picture)
     
