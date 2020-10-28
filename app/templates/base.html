@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
     {% if title %}
     <title>Blog - {{ title }}</title>
     {% else %}
@@ -24,14 +25,11 @@
               {% if current_user.is_authenticated %}
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                  <a class="nav-link" href="{{url_for('home')}}">Home <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="{{url_for('home')}}">Post <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('account')}}">Account </a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{url_for('add_post')}}">Post </a>
-              </li>
                 <!--
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

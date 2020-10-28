@@ -15,13 +15,13 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 menu-opciones">
                     <ul>
                         <li>
-                            <a>Link</a>
+                            <a class="btn btn-warning" href="{{url_for('update_post',post_id=post.id)}}">Modificar</a>
                         </li>
                         <li>
-                            <a>Link</a>
+                            <a class="btn btn-danger">Eliminar</a>
                         </li>
                     </ul>
                 </div>
