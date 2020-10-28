@@ -5,7 +5,7 @@ from flask import render_template
 from flask import url_for
 from flask import flash
 from flask import redirect
-
+from flask import abort
 #Formas 
 from app.forms import RegistrationForm,LoginForm,UpdateProfileForm
 from app.forms import PostForm
@@ -133,6 +133,50 @@ def post(post_id):
     #Get the post by id
     post = Post.query.get_or_404(post_id)
     return render_template('post.html',title=post.title,post=post)
+
+#Update post
+@app.route('/post/update/<int:post_id>',methods=['GET','POST'])
+@login_required
+def update_post(post_id):
+    print('Update post ==> ',post_id)
+    #Get the post 
+    post = Post.query.get_or_404(post_id)
+    #print('Post ==> ',post)
+    #Chek if the user is the person who wrote the post
+    if post.author != current_user:
+        #print('Abort')
+        abort(403)
+
+    form = PostForm()
+    #Populate the form
+    form.title.data = post.title
+    form.content.data = post.content
+
+    if request.method == 'POST':
+        #Validar, lleno la forma con los datos del form
+        form = PostForm(request.form)
+        if form.validate():
+            post.title = form.title.data
+            post.content = form.content.data
+            print('Title ==> ',form.title.data)
+            print('Content ==> ',form.content.data)
+            try:
+            #db.session.add(post)
+                print('Post data ==> ',post)
+                db.session.commit()
+                flash('Post modificado','success')
+            except Exception as e:
+                flash('No se pudo modificar post','danger')
+                print(e)
+            
+            return redirect(url_for('post',post_id = post.id))
+        else:
+            return render_template('update_post.html',title='Update post',form=form)
+
+    else:
+        print('Mostrar post update')
+        return render_template('update_post.html',title='Update post',form=form)
+
 
 #Salir del sistema
 @app.route('/logout')
