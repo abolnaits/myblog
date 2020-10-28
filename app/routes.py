@@ -80,8 +80,12 @@ def register():
 @app.route('/home')
 @login_required
 def home():
+    #Get the page GET value
+    page = request.args.get('page',1,type=int)
     #Get all posts
-    posts = Post.query.all()
+    posts = Post.query.paginate(per_page=5,page=page)
+    
+
     return render_template('home.html',posts = posts)
 
 #Perfil del usuario
