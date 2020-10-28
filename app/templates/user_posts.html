@@ -4,7 +4,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <h1>List of Posts</h1>
+                    <h1>List of Posts by user {{user.username}}</h1>
+                    <h2>Total: {{ posts.total}}</h2>
                     {% for post in posts.items %}
                     <div class="border border-success m-2 p-1">
                         <img class="img-thumbnail" src="{{url_for('static',filename='img/'+post.author.image_file)}}"/>
@@ -18,10 +19,10 @@
                     {% for page_num in posts.iter_pages() %}
                         {% if page_num %}
                              {% if posts.page == page_num %}
-                             <a href="{{url_for('home',page=page_num)}}" class="btn btn-info mb-4 ">{{ page_num}}</a>
+                             <a href="{{url_for('user_posts',username=user.username,page=page_num)}}" class="btn btn-info mb-4 ">{{ page_num}}</a>
                         
                              {% else %}
-                             <a href="{{url_for('home',page=page_num)}}" class="btn btn-outline-info mb-4 ">{{ page_num}}</a>
+                             <a href="{{url_for('user_posts',username=user.username,page=page_num)}}" class="btn btn-outline-info mb-4 ">{{ page_num}}</a>
                         
                              {% endif %}
                         {% else %}

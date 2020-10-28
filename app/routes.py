@@ -76,14 +76,17 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html',form=form,title='Registro')
 
-
+'''
+Get all the post from the DB
+Those posts will be paginated
+'''
 @app.route('/home')
 @login_required
 def home():
     #Get the page GET value
     page = request.args.get('page',1,type=int)
     #Get all posts
-    posts = Post.query.paginate(per_page=5,page=page)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(per_page=5,page=page)
     
 
     return render_template('home.html',posts = posts)
@@ -199,6 +202,16 @@ def del_post(post_id):
     return redirect(url_for('home'))
     return '{0}'.format(post_id)
 
+#Show all post by author
+@app.route('/user/<string:username>',methods=['GET'])
+def user_posts(username):
+    #Get the page variable GET
+    page = request.args.get('page',1,type=int)
+    #Get the user by this username
+    user = Usuario.query.filter_by(username=username).first_or_404()
+    #Filter post by username
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page,per_page=5)
+    return render_template('user_posts.html',posts = posts,user=user)
 
 #Salir del sistema
 @app.route('/logout')
