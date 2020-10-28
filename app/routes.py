@@ -177,6 +177,24 @@ def update_post(post_id):
         print('Mostrar post update')
         return render_template('update_post.html',title='Update post',form=form)
 
+#Delete post from DB
+@app.route('/del_post/<int:post_id>',methods=['POST'])
+def del_post(post_id):
+    #Get post by id
+    post = Post.query.get_or_404(post_id)
+    #Check the author
+    if post.author != current_user:
+        abort(403)
+
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        flash('Post eliminado','danger')
+    except Exception as e:
+        flash('No se pudo eliminar post','danger')
+    return redirect(url_for('home'))
+    return '{0}'.format(post_id)
+
 
 #Salir del sistema
 @app.route('/logout')
@@ -188,6 +206,7 @@ def logout():
         flash('Sesion terminada','danger')
     
     return redirect(url_for('index')) 
+
         
 #   
 #Functions
